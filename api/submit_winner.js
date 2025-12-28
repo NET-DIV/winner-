@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   // Send to Telegram
   const BOT_TOKEN = "8346230286:AAHNl0Hsr_mZKIMihgQZPW0mvwbwtPVhB6Y";
-  const CHAT_ID = "<YOUR_CHAT_ID>"; // Replace with your chat id
+  const CHAT_ID = 8257327334; // Replace with your chat id
   const text = `New Winner:\nName: ${name}\nBirthday: ${birthday}\nCountry: ${country}`;
 
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
