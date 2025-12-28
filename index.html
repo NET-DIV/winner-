@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Winners Form</title>
+  <style>
+    body { font-family: Arial; margin: 30px; background: #f9f9f9; }
+    h1 { text-align: center; color: #333; }
+    form { max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input[type="text"], input[type="date"] { width: 100%; padding: 8px; margin-top: 2px; }
+    input[type="submit"] { margin-top: 15px; padding: 10px; width: 100%; background: #333; color: white; cursor: pointer; border: none; }
+    table { width: 80%; margin: 30px auto 0; border-collapse: collapse; background: #fff; }
+    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+    th { background: #ddd; }
+  </style>
+</head>
+<body>
+  <h1>Winners Form</h1>
+  <form id="winnerForm">
+    <label>Name or Tag</label>
+    <input type="text" id="name" required>
+    <label>Birthday</label>
+    <input type="date" id="birthday" required>
+    <label>Country</label>
+    <input type="text" id="country" required>
+    <input type="submit" value="Submit">
+  </form>
+
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Birthday</th><th>Country</th></tr>
+    </thead>
+    <tbody id="winnersTable"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('winnerForm');
+    const tableBody = document.getElementById('winnersTable');
+
+    async function fetchWinners() {
+      const res = await fetch('/api/get_winners');
+      const data = await res.json();
+      tableBody.innerHTML = '';
+      data.winners.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${w.name}</td><td>${w.birthday}</td><td>${w.country}</td>`;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const birthday = document.getElementById('birthday').value;
+      const country = document.getElementById('country').value;
+
+      await fetch('/api/submit_winner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, birthday, country })
+      });
+
+      form.reset();
+      fetchWinners();
+    });
+
+    // load winners on page load
+    fetchWinners();
+  </script>
+</body>
+</html>
